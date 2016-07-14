@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 public class Main {
 
     static final int SIZE = 10;
+    static boolean hitDeadEnd = false;
 
     static Room[][] createRooms() {
         Room[][] rooms = new Room[SIZE][SIZE];
@@ -79,6 +80,10 @@ public class Main {
         room.wasVisited = true;
         Room nextRoom = randomNeighbor(rooms, room.row, room.col);
         if (nextRoom == null) {
+            if (!hitDeadEnd) {
+                room.isEnd = true;
+                hitDeadEnd = true;
+            }
             return false;
         }
         tearDownWall(room, nextRoom);
@@ -96,7 +101,15 @@ public class Main {
         for (Room[] row : rooms) {
             System.out.print("|");
             for (Room room : row) {
-                System.out.print(room.hasBottom ? "_" : " ");
+                if (rooms[0][0] == room) {
+                    System.out.print("o");
+                }
+                else if (room.isEnd) {
+                    System.out.print("x");
+                }
+                else {
+                    System.out.print(room.hasBottom ? "_" : " ");
+                }
                 System.out.print(room.hasRight ? "|" : " ");
             }
             System.out.println();
